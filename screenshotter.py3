@@ -32,6 +32,8 @@ folder_id = 'your-folder-id'
 
 def get_screenshots_and_upload(list_of_urls):
     browser = webdriver.Chrome(service=webdriver_service, options=chrome_options)
+    # Pause the script and wait for you to log in
+    input("Please log in and then press Enter to continue...")
     for url in list_of_urls:
         try:
             browser.get(url[0]) # Access the first element of each row, which should be the URL
