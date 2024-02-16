@@ -17,7 +17,7 @@ chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('disable-notifications')
 
-webdriver_service = Service("chromedriver/chromedriver") ## path to where you saved chromedriver binary
+webdriver_service = Service("/usr/local/bin/chromedriver") ## path to where you saved chromedriver binary
 
 # Ask for the name of the CSV file
 csv_file = input("Please enter the name of the CSV file (including the .csv extension): ")
