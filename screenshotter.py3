@@ -28,7 +28,7 @@ with open(csv_file, 'r') as f:
     urls_list = list(reader)
 
 # Specify the Google Drive folder ID where you want to upload the files
-folder_id = 'your-folder-id'
+folder_id = '1_c0gk_ZyBuGPU5q31R9tzEFaSIawmYWr'
 
 def get_screenshots_and_upload(list_of_urls):
     browser = webdriver.Chrome(service=webdriver_service, options=chrome_options)
