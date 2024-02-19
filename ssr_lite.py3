@@ -1,5 +1,6 @@
 import csv
 import time as t
+import os
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -7,17 +8,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
-
-gauth = GoogleAuth()
-drive = GoogleDrive(gauth)
 
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('disable-notifications')
 chrome_options.add_argument("user-data-dir=selenium")
-
 
 webdriver_service = Service("chromedriver/chromedriver") ## path to where you saved chromedriver binary
 
@@ -29,10 +24,10 @@ with open(csv_file, 'r') as f:
     reader = csv.reader(f)
     urls_list = list(reader)
 
-# Specify the Google Drive folder ID where you want to upload the files
-folder_id = 'your-folder-id'
+# Get the directory of the CSV file
+dir_path = os.path.dirname(os.path.realpath(csv_file))
 
-def get_screenshots_and_upload(list_of_urls):
+def get_screenshots_and_save(list_of_urls):
     browser = webdriver.Chrome(service=webdriver_service, options=chrome_options)
     # Pause the script and wait for you to log in
     input("Please log in and then press Enter to continue...")
@@ -46,13 +41,8 @@ def get_screenshots_and_upload(list_of_urls):
             sh_url = url[0].split('://')[1].split('.')[0]
             filename = f'{sh_url}_{date_time}.png'
             print(sh_url, date_time)
-            page.screenshot(filename)
+            page.screenshot(os.path.join(dir_path, filename))
             print('screenshotted ', url[0])
-            # Upload the file to Google Drive
-            gfile = drive.CreateFile({'title': filename, 'parents': [{'id': folder_id}]})
-            gfile.SetContentFile(filename)
-            gfile.Upload()
-            print('File uploaded to Google Drive')
         except Exception as e:
             print(f"An error occurred: {e}")
         finally:
@@ -60,4 +50,4 @@ def get_screenshots_and_upload(list_of_urls):
     browser.quit()
 
 # Call the function directly
-get_screenshots_and_upload(urls_list)
+get_screenshots_and_save(urls_list)
