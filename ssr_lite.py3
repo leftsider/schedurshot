@@ -41,7 +41,7 @@ def get_screenshots_and_save(list_of_urls):
             sh_url = url[0].split('://')[1].split('.')[0]
             filename = f'{sh_url}_{date_time}.png'
             print(sh_url, date_time)
-            page.screenshot(os.path.join(dir_path, filename))
+            browser.save_screenshot(os.path.join(dir_path, filename)) # Save a full page screenshot
             print('screenshotted ', url[0])
         except Exception as e:
             print(f"An error occurred: {e}")
