@@ -60,4 +60,4 @@ def get_screenshots_and_save(list_of_urls_and_repos):
     browser.quit()
 
 # Call the function directly
-get_screenshots_and_save(urls_list)
+get_screenshots_and_save(url_repo_list)
