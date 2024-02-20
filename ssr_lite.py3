@@ -21,10 +21,10 @@ webdriver_service = Service("chromedriver/chromedriver") ## path to where you sa
 # Ask for the name of the CSV file
 csv_file = input("Please enter the name of the CSV file (including the .csv extension): ")
 
-# Read URLs from the provided CSV file
+# Read URLs and repo names from the provided CSV file
 with open(csv_file, 'r') as f:
-    reader = csv.reader(f)
-    urls_list = list(reader)
+    reader = csv.DictReader(f)
+    url_repo_list = list(reader)
 
 # Get the directory of the CSV file
 dir_path = os.path.dirname(os.path.realpath(csv_file))
@@ -35,21 +35,24 @@ def get_screenshots_and_save(list_of_urls_and_repos):
     input("Please log in and then press Enter to continue...")
     for row in list_of_urls_and_repos:
         try:
-            url = row['URL']
-            repo = row['repo']
-            # Create the repo folder if it doesn't exist
-            repo_path = os.path.join(dir_path, repo)
-            os.makedirs(repo_path, exist_ok=True)
-            browser.get(url) # Access the URL
-            WebDriverWait(browser,10).until(EC.element_to_be_clickable((By.TAG_NAME, "body")))
-            t.sleep(5)
-            now = datetime.now()
-            date_time = now.strftime("%Y_%m_%d_%H_%M_%S")
-            sh_url = url.split('://')[1].split('.')[0]
-            filename = f'{sh_url}_{date_time}.png'
-            print(sh_url, date_time)
-            browser.save_screenshot(os.path.join(repo_path, filename)) # Save the screenshot in the repo folder
-            print('screenshotted ', url)
+            url = row.get('URL')
+            repo = row.get('repo')
+            if url and repo:
+                # Create the repo folder if it doesn't exist
+                repo_path = os.path.join(dir_path, repo)
+                os.makedirs(repo_path, exist_ok=True)
+                browser.get(url) # Access the URL
+                WebDriverWait(browser,10).until(EC.element_to_be_clickable((By.TAG_NAME, "body")))
+                t.sleep(5)
+                now = datetime.now()
+                date_time = now.strftime("%Y_%m_%d_%H_%M_%S")
+                sh_url = url.split('://')[1].split('.')[0]
+                filename = f'{sh_url}_{date_time}.png'
+                print(sh_url, date_time)
+                browser.save_screenshot(os.path.join(repo_path, filename)) # Save the screenshot in the repo folder
+                print('screenshotted ', url)
+            else:
+                print(f"Missing URL or repo in row: {row}")
         except Exception as e:
             print(f"An error occurred: {e}")
         finally:
